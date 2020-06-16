@@ -44,6 +44,8 @@
         value="0"
         min="0"
         @click="onProgressClicked"
+        @mousedown="onProgressMouseDown"
+        @mousemove="onProgressMouseMove"
       >
         <span
           id="progress-bar"
@@ -777,6 +779,33 @@ export default {
       const pos = (e.pageX - left) / this.progress.offsetWidth
       const currentTime = pos * this.video.duration
       this.setCurrentTime(currentTime)
+    },
+
+    onProgressMouseDown (e) {
+      // Note: Similar to 'click' event but is executed on mouse down instead of up.
+      if (e.buttons === 1) { // Primary button (left click)
+        let left = this.progress.offsetLeft
+        if (left === 0 && !this.isFullScreen()) {
+          left = this.progress.parentElement.offsetParent.offsetLeft - 10
+        }
+        const pos = (e.pageX - left) / this.progress.offsetWidth
+        const currentTime = pos * this.video.duration
+        this.setCurrentTime(currentTime)
+      }
+    },
+
+    onProgressMouseMove (e) {
+      // Note: Mouse move only registered to the progress bar. Ideally would be able to
+      //   move across the player for easier usability. May require an "isSeeking" property?
+      if (e.buttons === 1) { // Primary button (left click)
+        let left = this.progress.offsetLeft
+        if (left === 0 && !this.isFullScreen()) {
+          left = this.progress.parentElement.offsetParent.offsetLeft - 10
+        }
+        const pos = (e.pageX - left) / this.progress.offsetWidth
+        const currentTime = pos * this.video.duration
+        this.setCurrentTime(currentTime)
+      }
     },
 
     updateProgressBar () {
